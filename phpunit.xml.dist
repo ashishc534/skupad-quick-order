@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  Full WP/WC PHPUnit suite can be wired later with wordpress-develop + WooCommerce test libs.
+  Day-0 verification uses the PHPUnit-lite script: php tests/test-line-parser.php
+  and the Builder harness: python3 test_unit.py
+-->
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    colors="true"
+    cacheDirectory=".phpunit.cache"
+>
+    <testsuites>
+        <testsuite name="SkuPad">
+            <directory suffix=".php">tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
