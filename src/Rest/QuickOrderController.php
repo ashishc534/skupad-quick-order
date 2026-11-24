@@ -4,32 +4,38 @@
  *
  * Works with classic cart and Cart/Checkout Blocks (uses WC()->cart).
  *
- * @package SkuPad
+ * @package Pryviko
  */
 
 declare(strict_types=1);
 
-namespace OpenJarvis\SkuPad\Rest;
+namespace Pryviko\QuickOrder\Rest;
 
-use OpenJarvis\SkuPad\Catalog\SkuValidator;
-use OpenJarvis\SkuPad\Parser\LineParser;
+use Pryviko\QuickOrder\Catalog\SkuValidator;
+use Pryviko\QuickOrder\Parser\LineParser;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
 final class QuickOrderController
 {
+    /** Max REST requests per minute per IP/user (SKU enumeration guard). */
+    private const RATE_LIMIT = 30;
+
+    /** Transient TTL for the sliding minute window (seconds). */
+    private const RATE_WINDOW = 60;
+
     public static function register(): void
     {
         add_action(
             'rest_api_init',
             static function (): void {
                 register_rest_route(
-                    'skupad/v1',
+                    'pryviko/v1',
                     '/validate',
                     [
                         'methods' => 'POST',
-                        'permission_callback' => [self::class, 'can_use'],
+                        'permission_callback' => [self::class, 'permission_callback'],
                         'callback' => [self::class, 'validate'],
                         'args' => [
                             'payload' => [
@@ -41,11 +47,11 @@ final class QuickOrderController
                 );
 
                 register_rest_route(
-                    'skupad/v1',
+                    'pryviko/v1',
                     '/quick-order',
                     [
                         'methods' => 'POST',
-                        'permission_callback' => [self::class, 'can_use'],
+                        'permission_callback' => [self::class, 'permission_callback'],
                         'callback' => [self::class, 'quick_order'],
                         'args' => [
                             'payload' => [
@@ -64,20 +70,65 @@ final class QuickOrderController
     }
 
     /**
-     * Storefront-safe: any visitor with a valid REST nonce may validate / add.
-     * Filter `skupad_quick_order_can_use` to require login for wholesale stores.
+     * Public storefront callback (PCP-safe): any visitor may validate / add.
+     *
+     * Documented public endpoint — same as `__return_true`, with an optional
+     * filter so wholesale stores can require login.
+     *
+     * Filter `pryviko_quick_order_can_use` to require login for wholesale stores.
      */
-    public static function can_use(): bool
+    public static function permission_callback(): bool
     {
-        $allowed = true;
         /**
-         * @param bool $allowed
+         * @param bool $allowed Whether the current request may use Pryviko REST.
          */
-        return (bool) apply_filters('skupad_quick_order_can_use', $allowed);
+        return (bool) apply_filters('pryviko_quick_order_can_use', true);
     }
 
-    public static function validate(WP_REST_Request $request): WP_REST_Response
+    /**
+     * @return true|WP_Error
+     */
+    public static function enforce_rate_limit()
     {
+        $key = self::rate_limit_key();
+        $count = (int) get_transient($key);
+        if ($count >= self::RATE_LIMIT) {
+            return new WP_Error(
+                'pryviko_rate_limited',
+                __('Too many requests. Please wait a minute and try again.', 'pryviko-quick-order'),
+                ['status' => 429]
+            );
+        }
+        set_transient($key, $count + 1, self::RATE_WINDOW);
+        return true;
+    }
+
+    private static function rate_limit_key(): string
+    {
+        $user_id = function_exists('get_current_user_id') ? (int) get_current_user_id() : 0;
+        if ($user_id > 0) {
+            return 'pryviko_rl_u_' . $user_id;
+        }
+        $ip = '';
+        if (!empty($_SERVER['REMOTE_ADDR'])) {
+            $ip = sanitize_text_field(wp_unslash((string) $_SERVER['REMOTE_ADDR']));
+        }
+        if ($ip === '') {
+            $ip = 'unknown';
+        }
+        return 'pryviko_rl_ip_' . md5($ip);
+    }
+
+    /**
+     * @return WP_REST_Response|WP_Error
+     */
+    public static function validate(WP_REST_Request $request)
+    {
+        $limited = self::enforce_rate_limit();
+        if (is_wp_error($limited)) {
+            return $limited;
+        }
+
         $raw = (string) $request->get_param('payload');
         $parsed = LineParser::parse($raw);
         $lines = SkuValidator::resolveCatalog($parsed);
@@ -100,14 +151,19 @@ final class QuickOrderController
      */
     public static function quick_order(WP_REST_Request $request)
     {
+        $limited = self::enforce_rate_limit();
+        if (is_wp_error($limited)) {
+            return $limited;
+        }
+
         $raw = (string) $request->get_param('payload');
         $add = filter_var($request->get_param('add_to_cart'), FILTER_VALIDATE_BOOLEAN);
 
         $parsed = LineParser::parse($raw);
         if ($parsed === []) {
             return new WP_Error(
-                'skupad_empty',
-                __('No valid SKU lines found.', 'skupad-quick-order'),
+                'pryviko_empty',
+                __('No valid SKU lines found.', 'pryviko-quick-order'),
                 ['status' => 400]
             );
         }
@@ -119,8 +175,8 @@ final class QuickOrderController
         if ($add) {
             if (!function_exists('WC')) {
                 return new WP_Error(
-                    'skupad_no_cart',
-                    __('WooCommerce cart is not available.', 'skupad-quick-order'),
+                    'pryviko_no_cart',
+                    __('WooCommerce cart is not available.', 'pryviko-quick-order'),
                     ['status' => 500]
                 );
             }
@@ -132,8 +188,8 @@ final class QuickOrderController
 
             if (!WC()->cart) {
                 return new WP_Error(
-                    'skupad_no_cart',
-                    __('WooCommerce cart is not available.', 'skupad-quick-order'),
+                    'pryviko_no_cart',
+                    __('WooCommerce cart is not available.', 'pryviko-quick-order'),
                     ['status' => 500]
                 );
             }

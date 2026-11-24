@@ -1,4 +1,4 @@
-# Listing — SkuPad - Quick Order & Paste-SKU Pad for WooCommerce
+# Listing — Pryviko – Quick Order & Paste-SKU Pad for WooCommerce
 
 ## Marketplace
 
@@ -17,19 +17,19 @@ Quick-order paste pad for WooCommerce: SKU/CSV in, validated cart lines out. HPO
 
 Wholesale buyers should not click “Add to cart” fifty times.
 
-SkuPad gives your storefront a paste pad where customers drop SKU + quantity lines (CSV, TSV, or spaces), see live catalog validation (found / stock / price), and push every valid line into the WooCommerce cart.
+Pryviko gives your storefront a paste pad where customers drop SKU + quantity lines (CSV, TSV, or spaces), see live catalog validation (found / stock / price), and push every valid line into the WooCommerce cart.
 
 - Free WordPress.org plugin — no trialware, no feature timers
 - Declared compatible with High-Performance Order Storage (HPOS)
 - Works with Cart and Checkout Blocks via the standard cart session
-- Shortcode `[skupad_quick_order]` and Gutenberg block
+- Shortcode `[pryviko_quick_order]` and Gutenberg block
 - Optional Pro add-on ($29–$79): CSV upload, saved order lists, one-click reorder
 
 ## Features
 
-- Installable SkuPad plugin with WordPress plugin headers + readme.txt
+- Installable Pryviko plugin with WordPress plugin headers + readme.txt
 - SKU/CSV paste quick-order workflow (HPOS + Cart/Checkout Blocks compatible)
-- Live stock/price/purchasable validation via REST
+- Live stock/price/purchasable validation via REST (public products only)
 - LISTING.md WordPress.org / WooCommerce marketplace copy + README install steps
 
 ## Price
@@ -47,4 +47,4 @@ woocommerce quick order, sku paste, b2b order form, wholesale csv order, hpos co
 
 ## Competitor wedge
 
-WPExperts Bulk Order Form ($79/yr), Codup Extend B2B Quick Order ($49/yr), B2B Quick Order Grid ($79/yr) — SkuPad ships a focused free paste pad first, then upsells Pro without locking the core.
+WPExperts Bulk Order Form ($79/yr), Codup Extend B2B Quick Order ($49/yr), B2B Quick Order Grid ($79/yr) — Pryviko ships a focused free paste pad first, then upsells Pro without locking the core.

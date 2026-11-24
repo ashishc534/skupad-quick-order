@@ -10,8 +10,8 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/src/Parser/LineParser.php';
 require_once dirname(__DIR__) . '/src/Catalog/SkuValidator.php';
 
-use OpenJarvis\SkuPad\Catalog\SkuValidator;
-use OpenJarvis\SkuPad\Parser\LineParser;
+use Pryviko\QuickOrder\Catalog\SkuValidator;
+use Pryviko\QuickOrder\Parser\LineParser;
 
 function assert_true(bool $cond, string $msg): void
 {

@@ -1,23 +1,23 @@
 /**
- * SkuPad storefront UI — validate paste + add to WooCommerce cart via REST.
+ * Pryviko storefront UI — validate paste + add to WooCommerce cart via REST.
  * Compatible with classic cart and Cart/Checkout Blocks (session cart).
  */
 (function () {
   'use strict';
 
   function cfg(root) {
-    var localized = window.SkuPadQuickOrder || {};
+    var localized = window.PryvikoQuickOrder || {};
     var fromDom = root
       ? {
-          restUrl: root.getAttribute('data-skupad-rest-url') || '',
-          nonce: root.getAttribute('data-skupad-nonce') || '',
-          cartUrl: root.getAttribute('data-skupad-cart-url') || '',
+          restUrl: root.getAttribute('data-pryviko-rest-url') || '',
+          nonce: root.getAttribute('data-pryviko-nonce') || '',
+          cartUrl: root.getAttribute('data-pryviko-cart-url') || '',
         }
       : {};
     // Prefer localized script config; fall back to data-* when block themes
     // render the shortcode before wp_localize_script can attach.
     return {
-      restUrl: localized.restUrl || fromDom.restUrl || '/wp-json/skupad/v1',
+      restUrl: localized.restUrl || fromDom.restUrl || '/wp-json/pryviko/v1',
       nonce: localized.nonce || fromDom.nonce || '',
       cartUrl: localized.cartUrl || fromDom.cartUrl || '/cart/',
       i18n: localized.i18n || {},
@@ -30,14 +30,14 @@
   }
 
   function setStatus(root, message, kind) {
-    var el = root.querySelector('.skupad-quick-order__status');
+    var el = root.querySelector('.pryviko-quick-order__status');
     if (!el) return;
     el.textContent = message || '';
-    el.className = 'skupad-quick-order__status' + (kind ? ' is-' + kind : '');
+    el.className = 'pryviko-quick-order__status' + (kind ? ' is-' + kind : '');
   }
 
   function renderResults(root, lines) {
-    var box = root.querySelector('.skupad-quick-order__results');
+    var box = root.querySelector('.pryviko-quick-order__results');
     if (!box) return;
     if (!lines || !lines.length) {
       box.hidden = true;
@@ -72,7 +72,7 @@
       .join('');
     box.hidden = false;
     box.innerHTML =
-      '<table class="skupad-quick-order__table">' +
+      '<table class="pryviko-quick-order__table">' +
       '<thead><tr><th>SKU</th><th>Qty</th><th>Product</th><th>Price</th><th>Status</th></tr></thead>' +
       '<tbody>' +
       rows +
@@ -116,7 +116,7 @@
   }
 
   function pasteValue(root) {
-    var ta = root.querySelector('.skupad-quick-order__paste');
+    var ta = root.querySelector('.pryviko-quick-order__paste');
     return ta ? String(ta.value || '').trim() : '';
   }
 
@@ -172,7 +172,7 @@
           );
         }
         document.body.dispatchEvent(
-          new CustomEvent('wc-blocks_added_to_cart', { detail: { skupad: true } })
+          new CustomEvent('wc-blocks_added_to_cart', { detail: { pryviko: true } })
         );
         if (typeof jQuery !== 'undefined') {
           jQuery(document.body).trigger('wc_fragment_refresh');
@@ -185,16 +185,16 @@
   }
 
   function bind(root) {
-    if (root.getAttribute('data-skupad-bound') === '1') return;
-    root.setAttribute('data-skupad-bound', '1');
-    var validateBtn = root.querySelector('.skupad-quick-order__btn--validate');
-    var addBtn = root.querySelector('.skupad-quick-order__btn--add');
+    if (root.getAttribute('data-pryviko-bound') === '1') return;
+    root.setAttribute('data-pryviko-bound', '1');
+    var validateBtn = root.querySelector('.pryviko-quick-order__btn--validate');
+    var addBtn = root.querySelector('.pryviko-quick-order__btn--add');
     if (validateBtn) validateBtn.addEventListener('click', function () { onValidate(root); });
     if (addBtn) addBtn.addEventListener('click', function () { onAdd(root); });
   }
 
   function boot() {
-    document.querySelectorAll('[data-skupad-root]').forEach(bind);
+    document.querySelectorAll('[data-pryviko-root]').forEach(bind);
   }
 
   if (document.readyState === 'loading') {

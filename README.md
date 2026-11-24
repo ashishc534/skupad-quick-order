@@ -1,6 +1,6 @@
-# SkuPad - Quick Order & Paste-SKU Pad for WooCommerce
+# Pryviko – Quick Order & Paste-SKU Pad for WooCommerce
 
-B2B and wholesale WooCommerce buyers with SKU lists waste time adding products one by one; paid quick-order plugins cost $49–$79/yr. SkuPad is a lightweight, GPL-licensed paste pad that validates SKUs against your catalog and adds them to the cart in one step.
+B2B and wholesale WooCommerce buyers with SKU lists waste time adding products one by one; paid quick-order plugins cost $49–$79/yr. Pryviko is a lightweight, GPL-licensed paste pad that validates SKUs against your catalog and adds them to the cart in one step.
 
 ## Stack
 
@@ -18,9 +18,9 @@ B2B and wholesale WooCommerce buyers with SKU lists waste time adding products o
 
 ## Install (local / staging)
 
-1. Copy this folder to `wp-content/plugins/skupad-quick-order/`
+1. Copy this folder to `wp-content/plugins/pryviko-quick-order/`
 2. Activate in WP Admin → Plugins
-3. Add `[skupad_quick_order]` to any page (or insert the **SkuPad Quick Order** block)
+3. Add `[pryviko_quick_order]` to any page (or insert the **Pryviko Quick Order** block)
 4. Paste lines like:
 
 ```text
@@ -33,9 +33,9 @@ XYZ-200,1
 
 | File | Role |
 |------|------|
-| `skupad-quick-order.php` | Plugin bootstrap + HPOS/Blocks compatibility |
+| `pryviko-quick-order.php` | Plugin bootstrap + HPOS/Blocks compatibility |
 | `src/Parser/LineParser.php` | CSV/TSV/space paste parser |
-| `src/Catalog/SkuValidator.php` | Sanitize + catalog resolve |
+| `src/Catalog/SkuValidator.php` | Sanitize + strict public catalog resolve |
 | `src/Rest/QuickOrderController.php` | REST `/validate` + `/quick-order` |
 | `src/Plugin.php` | Shortcode, assets, block, admin |
 | `assets/js/quick-order.js` | Storefront UI |
@@ -44,10 +44,12 @@ XYZ-200,1
 
 ## REST
 
-- `POST /wp-json/skupad/v1/validate` — `{ "payload": "SKU,qty\\n..." }`
-- `POST /wp-json/skupad/v1/quick-order` — same + `add_to_cart: true`
+- `POST /wp-json/pryviko/v1/validate` — `{ "payload": "SKU,qty\\n..." }`
+- `POST /wp-json/pryviko/v1/quick-order` — same + `add_to_cart: true`
 
-Requires `X-WP-Nonce` (localized into the script as `SkuPadQuickOrder.nonce`).
+Requires `X-WP-Nonce` (localized into the script as `PryvikoQuickOrder.nonce`).
+
+Non-public products (draft, private, pending, catalog-hidden, or variations of non-public parents) return the same line payload as an unknown SKU — no name, price, stock, or product ID.
 
 ## Tests
 
@@ -55,6 +57,7 @@ Requires `X-WP-Nonce` (localized into the script as `SkuPadQuickOrder.nonce`).
 python3 test_unit.py
 # if php is installed:
 php tests/test-line-parser.php
+php tests/test-visibility-guard.php
 ```
 
 ## Compatibility notes
