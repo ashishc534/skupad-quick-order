@@ -1,10 +1,10 @@
-=== SkuPad - Quick Order & Paste-SKU Pad for WooCommerce ===
+=== Pryviko – Quick Order & Paste-SKU Pad for WooCommerce ===
 Contributors: ashishc534
 Tags: woocommerce, quick order, sku, b2b, wholesale
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 9.0
@@ -16,24 +16,24 @@ Paste SKU + quantity lines (comma, tab, or space-separated) and add validated pr
 
 B2B and wholesale buyers often arrive with a SKU list. Adding products one-by-one is slow, and many paid quick-order plugins charge $49–$79/year.
 
-SkuPad is a lightweight paste pad:
+Pryviko is a lightweight paste pad:
 
 * Paste SKU + quantity lines (comma, tab, or space-separated)
 * Live validation against your catalog (SKU found, stock, price, purchasable)
 * One-click add to cart
 * Works with High-Performance Order Storage (HPOS / custom order tables)
 * Compatible with Cart and Checkout Blocks (uses the standard WooCommerce cart session)
-* Shortcode `[skupad_quick_order]`
+* Shortcode `[pryviko_quick_order]`
 * GPL-2.0-or-later, no trialware — free paste pad stays fully unlocked
 
 Optional Pro add-on (separate purchase, **$39/year**): file upload for SKU lists, saved order lists, and one-click reorder. Free paste features stay free.
 
 == Installation ==
 
-1. Upload the `skupad-quick-order` folder to `/wp-content/plugins/` or install the zip via Plugins → Add New → Upload.
-2. Activate **SkuPad - Quick Order & Paste-SKU Pad for WooCommerce**.
+1. Upload the `pryviko-quick-order` folder to `/wp-content/plugins/` or install the zip via Plugins → Add New → Upload.
+2. Activate **Pryviko – Quick Order & Paste-SKU Pad for WooCommerce**.
 3. Ensure WooCommerce 9.0+ is active.
-4. Create a page and add the shortcode `[skupad_quick_order]`.
+4. Create a page and add the shortcode `[pryviko_quick_order]`.
 5. Open the page, paste SKUs, Validate, then Add to cart.
 
 == Frequently Asked Questions ==
@@ -52,7 +52,7 @@ No. The free paste-SKU workflow is fully unlocked under GPL-2.0-or-later. Pro fe
 
 = Can I require login for wholesale? =
 
-Yes. Filter `skupad_quick_order_can_use` to return true only for logged-in customers.
+Yes. Filter `pryviko_quick_order_can_use` to return true only for logged-in customers.
 
 = Does Free include file upload? =
 
@@ -64,6 +64,12 @@ No. Free supports pasting SKU + quantity text into the pad. File upload is part 
 
 == Changelog ==
 
+= 1.0.2 =
+* Security: REST validate and quick-order no longer disclose name, price, or stock for draft, private, pending, or catalog-hidden products (or variations of non-public parents). Same response as unknown SKU.
+* Brand: Pryviko (slug `pryviko-quick-order`, text domain, REST `pryviko/v1`, shortcode `[pryviko_quick_order]`).
+* Rate-limit REST endpoints (~30 requests/minute per IP or user) to slow SKU enumeration.
+* Documented public REST `permission_callback` for Plugin Check.
+
 = 1.0.1 =
 * Fix REST nonce localization for block themes (logged-in Cookie check failed).
 * Plugin Check: escape shortcode output at echo; add languages path.
@@ -73,6 +79,9 @@ No. Free supports pasting SKU + quantity text into the pad. File upload is part 
 * Initial release: paste-line SKU parser, catalog validator, REST validate + quick-order, shortcode UI, HPOS and Cart/Checkout Blocks compatibility declarations.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Security: closes draft/private SKU information disclosure on REST endpoints. Plugin renamed to Pryviko; update shortcode to `[pryviko_quick_order]`.
 
 = 1.0.1 =
 Logged-in storefront Validate / Add to cart nonce fix; Plugin Check packaging; WordPress.org author/readme cleanup for ashishc534.

@@ -2,12 +2,12 @@
 /**
  * Parse pasted SKU / CSV / TSV / space-separated quick-order lines.
  *
- * @package SkuPad
+ * @package Pryviko
  */
 
 declare(strict_types=1);
 
-namespace OpenJarvis\SkuPad\Parser;
+namespace Pryviko\QuickOrder\Parser;
 
 final class LineParser
 {
