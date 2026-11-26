@@ -1,0 +1,23 @@
+{
+    "name": "pryviko/quick-order",
+    "description": "Pryviko Quick Order for WooCommerce",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "ashishc534"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "freemius/wordpress-sdk": "^2.13"
+    },
+    "scripts": {
+        "test": [
+            "php tests/test-line-parser.php",
+            "php tests/test-visibility-guard.php",
+            "php tests/test-pro-features.php"
+        ],
+        "lint": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+    }
+}

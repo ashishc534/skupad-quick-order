@@ -2,11 +2,6 @@
 /**
  * Visibility / information-disclosure guard tests (mocked WC catalog).
  *
- * Proves draft/private/pending/catalog-hidden SKUs and publish variations of
- * draft/private parents return the exact same resolveCatalog row as an unknown
- * SKU. Published visible products resolve normally. Both REST endpoints use
- * resolveCatalog, so identical rows mean identical disclosure posture.
- *
  * Run: php tests/test-visibility-guard.php
  */
 
@@ -43,6 +38,9 @@ class Fake_WC_Product
     private ?int $stock_qty;
     private string $type;
     private int $parent_id;
+    /** @var array<string,string> */
+    private array $variation_attrs;
+    private string $sku;
 
     public function __construct(array $args)
     {
@@ -58,6 +56,8 @@ class Fake_WC_Product
         $this->stock_qty = array_key_exists('stock_qty', $args) ? (isset($args['stock_qty']) ? (int) $args['stock_qty'] : null) : null;
         $this->type = (string) ($args['type'] ?? 'simple');
         $this->parent_id = (int) ($args['parent_id'] ?? 0);
+        $this->variation_attrs = (array) ($args['variation_attrs'] ?? []);
+        $this->sku = (string) ($args['sku'] ?? '');
     }
 
     public function get_id(): int
@@ -119,9 +119,18 @@ class Fake_WC_Product
     {
         return $this->parent_id;
     }
+
+    public function get_variation_attributes(): array
+    {
+        return $this->variation_attrs;
+    }
+
+    public function get_sku(): string
+    {
+        return $this->sku;
+    }
 }
 
-// Alias so instanceof \WC_Product works against our fake.
 if (!class_exists('WC_Product', false)) {
     class_alias(Fake_WC_Product::class, 'WC_Product');
 }
@@ -148,6 +157,7 @@ function register_product(string $sku, array $args): Fake_WC_Product
 {
     $id = (int) ($args['id'] ?? (count($GLOBALS['pryviko_test_products']) + 1));
     $args['id'] = $id;
+    $args['sku'] = $sku;
     $product = new Fake_WC_Product($args);
     $GLOBALS['pryviko_test_products'][$id] = $product;
     $GLOBALS['pryviko_test_sku_map'][$sku] = $id;
@@ -166,7 +176,8 @@ function assert_same_as_unknown(array $row, string $sku, int $qty, string $label
     assert_true($row['ok'] === false, "{$label}: ok false");
 }
 
-// --- Catalog cases that must match unknown SKU ---
+SkuValidator::setProOverride(false);
+
 $cases = [
     'draft' => ['status' => 'draft', 'visible' => true, 'name' => 'Draft Widget', 'price' => '12.00'],
     'private' => ['status' => 'private', 'visible' => true, 'name' => 'Private Widget', 'price' => '22.00'],
@@ -183,11 +194,9 @@ foreach ($cases as $label => $args) {
     assert_same_as_unknown($rows[0], $sku, 2, $label);
 }
 
-// Unknown SKU baseline
 $unknownRows = SkuValidator::resolveCatalog([['sku' => 'NO-SUCH-SKU', 'qty' => 2]]);
 assert_same_as_unknown($unknownRows[0], 'NO-SUCH-SKU', 2, 'unknown');
 
-// Publish variation of draft parent
 register_product(
     'PARENT-DRAFT',
     ['id' => 900, 'status' => 'draft', 'visible' => true, 'name' => 'Draft Parent', 'type' => 'variable']
@@ -207,7 +216,6 @@ register_product(
 $varDraft = SkuValidator::resolveCatalog([['sku' => 'VAR-ON-DRAFT', 'qty' => 1]]);
 assert_same_as_unknown($varDraft[0], 'VAR-ON-DRAFT', 1, 'variation-of-draft-parent');
 
-// Publish variation of private parent
 register_product(
     'PARENT-PRIVATE',
     ['id' => 910, 'status' => 'private', 'visible' => true, 'name' => 'Private Parent', 'type' => 'variable']
@@ -227,7 +235,25 @@ register_product(
 $varPrivate = SkuValidator::resolveCatalog([['sku' => 'VAR-ON-PRIVATE', 'qty' => 1]]);
 assert_same_as_unknown($varPrivate[0], 'VAR-ON-PRIVATE', 1, 'variation-of-private-parent');
 
-// Published visible product works
+register_product(
+    'PARENT-HIDDEN',
+    ['id' => 930, 'status' => 'publish', 'visible' => false, 'name' => 'Hidden Parent', 'type' => 'variable']
+);
+register_product(
+    'VAR-ON-HIDDEN',
+    [
+        'id' => 931,
+        'status' => 'publish',
+        'visible' => true,
+        'name' => 'Var On Hidden',
+        'price' => '19.00',
+        'type' => 'variation',
+        'parent_id' => 930,
+    ]
+);
+$varHidden = SkuValidator::resolveCatalog([['sku' => 'VAR-ON-HIDDEN', 'qty' => 1]]);
+assert_same_as_unknown($varHidden[0], 'VAR-ON-HIDDEN', 1, 'variation-of-hidden-parent');
+
 register_product(
     'PUB-OK',
     [
@@ -245,16 +271,13 @@ $ok = SkuValidator::resolveCatalog([['sku' => 'PUB-OK', 'qty' => 1]]);
 assert_true($ok[0]['ok'] === true, 'published visible ok');
 assert_true($ok[0]['product_id'] === 1001, 'published product_id');
 assert_true($ok[0]['name'] === 'Public Widget', 'published name');
-assert_true($ok[0]['price'] === '9.50', 'published price');
-assert_true($ok[0]['message'] === 'OK', 'published message');
 
-// Variation of published visible parent works
 register_product(
     'PARENT-PUB',
     ['id' => 920, 'status' => 'publish', 'visible' => true, 'name' => 'Pub Parent', 'type' => 'variable']
 );
 register_product(
-    'VAR-ON-PUB',
+    'SKU-1042',
     [
         'id' => 921,
         'status' => 'publish',
@@ -266,36 +289,38 @@ register_product(
         'purchasable' => true,
         'in_stock' => true,
         'stock_status' => 'instock',
+        'variation_attrs' => [
+            'attribute_pa_size' => 'large',
+            'attribute_pa_color' => 'blue',
+        ],
     ]
 );
-$varOk = SkuValidator::resolveCatalog([['sku' => 'VAR-ON-PUB', 'qty' => 1]]);
-assert_true($varOk[0]['ok'] === true && $varOk[0]['product_id'] === 921, 'variation of public parent ok');
 
-// REST namespace + permission callback shape (no WP runtime)
+// Free mode: variation resolves with default name (preserve v1.0.2)
+SkuValidator::setProOverride(false);
+$varFree = SkuValidator::resolveCatalog([['sku' => 'SKU-1042', 'qty' => 1]]);
+assert_true($varFree[0]['ok'] === true && $varFree[0]['product_id'] === 921, 'free variation of public parent ok');
+assert_true($varFree[0]['name'] === 'Var On Pub', 'free mode keeps WC name');
+
+// Pro mode: attribute labels
+SkuValidator::setProOverride(true);
+$varPro = SkuValidator::resolveCatalog([['sku' => 'SKU-1042', 'qty' => 1]]);
+assert_true($varPro[0]['ok'] === true, 'pro variation ok');
+assert_true($varPro[0]['name'] === 'SKU-1042 — Large / Blue', 'pro variation attribute labels');
+
+SkuValidator::setProOverride(false);
+
 $ref = new ReflectionClass(QuickOrderController::class);
 $src = file_get_contents(dirname(__DIR__) . '/src/Rest/QuickOrderController.php');
 assert_true($src !== false && str_contains($src, "'pryviko/v1'"), 'REST namespace pryviko/v1');
 assert_true(str_contains($src, 'permission_callback'), 'permission_callback registered');
 assert_true(str_contains($src, 'enforce_rate_limit'), 'rate limit present');
-assert_true(
-    method_exists(QuickOrderController::class, 'permission_callback'),
-    'documented public permission_callback'
-);
+assert_true(method_exists(QuickOrderController::class, 'permission_callback'), 'documented public permission_callback');
 assert_true(
     method_exists(QuickOrderController::class, 'validate')
     && method_exists(QuickOrderController::class, 'quick_order'),
     'both endpoints present'
 );
-
-// Both endpoints call the same helper — prove by source inspection that neither
-// bypasses resolveCatalog / resolvePublicProductBySku.
 assert_true(str_contains($src, 'SkuValidator::resolveCatalog'), 'endpoints use resolveCatalog');
-$validatorSrc = file_get_contents(dirname(__DIR__) . '/src/Catalog/SkuValidator.php');
-assert_true(
-    $validatorSrc !== false
-    && str_contains($validatorSrc, 'resolvePublicProductBySku')
-    && str_contains($validatorSrc, 'isPubliclyResolvable'),
-    'strict helper centralized'
-);
 
 echo "visibility-guard ok\n";

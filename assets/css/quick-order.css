@@ -30,23 +30,163 @@
   font-size: 0.92rem;
 }
 
-.pryviko-quick-order__paste {
+.pryviko-quick-order__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0.85rem;
+}
+
+.pryviko-quick-order__tab {
+  appearance: none;
+  border: 1px solid var(--pryviko-line);
+  background: #fff;
+  color: var(--pryviko-ink);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pryviko-quick-order__tab.is-active {
+  border-color: var(--pryviko-accent);
+  color: var(--pryviko-accent);
+  background: color-mix(in srgb, var(--pryviko-accent) 8%, white);
+}
+
+.pryviko-quick-order__pro-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pryviko-accent);
+  border: 1px solid color-mix(in srgb, var(--pryviko-accent) 35%, white);
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  background: color-mix(in srgb, var(--pryviko-accent) 6%, white);
+}
+
+.pryviko-quick-order__paste,
+.pryviko-quick-order__po,
+.pryviko-quick-order__list-name {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  min-height: 9rem;
   padding: 0.75rem 0.85rem;
   border: 1px solid var(--pryviko-line);
   border-radius: 8px;
   background: #fff;
   color: var(--pryviko-ink);
   font: 0.95rem/1.45 "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.pryviko-quick-order__paste {
+  min-height: 9rem;
   resize: vertical;
 }
 
-.pryviko-quick-order__paste:focus {
+.pryviko-quick-order__po,
+.pryviko-quick-order__list-name {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  margin-bottom: 0.65rem;
+}
+
+.pryviko-quick-order__paste:focus,
+.pryviko-quick-order__po:focus,
+.pryviko-quick-order__list-name:focus {
   outline: 2px solid color-mix(in srgb, var(--pryviko-accent) 45%, white);
   border-color: var(--pryviko-accent);
+}
+
+.pryviko-quick-order__dropzone {
+  border: 1.5px dashed var(--pryviko-line);
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+  text-align: center;
+  color: var(--pryviko-muted);
+  font-size: 0.92rem;
+}
+
+.pryviko-quick-order__dropzone.is-drag {
+  border-color: var(--pryviko-accent);
+  background: color-mix(in srgb, var(--pryviko-accent) 6%, white);
+}
+
+.pryviko-quick-order__file {
+  display: block;
+  margin: 0.65rem auto 0.35rem;
+}
+
+.pryviko-quick-order__sample-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--pryviko-accent);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.pryviko-quick-order__upgrade {
+  border: 1px solid var(--pryviko-line);
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.pryviko-quick-order__upgrade p {
+  margin: 0 0 0.75rem;
+  color: var(--pryviko-muted);
+  font-size: 0.92rem;
+}
+
+.pryviko-quick-order__lists-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.pryviko-quick-order__lists-actions .pryviko-quick-order__list-name {
+  flex: 1 1 12rem;
+  margin-bottom: 0;
+}
+
+.pryviko-quick-order__list-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pryviko-quick-order__list-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--pryviko-line);
+  font-size: 0.9rem;
+}
+
+.pryviko-quick-order__list-btns {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.pryviko-quick-order__list-btns button {
+  appearance: none;
+  border: 1px solid var(--pryviko-line);
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .pryviko-quick-order__actions {
@@ -73,6 +213,10 @@
   background: #243447;
 }
 
+.pryviko-quick-order__btn--share {
+  background: #3a556e;
+}
+
 .pryviko-quick-order__btn:hover {
   filter: brightness(1.06);
 }
@@ -82,6 +226,16 @@
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.pryviko-quick-order__toast {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--pryviko-accent) 12%, white);
+  color: var(--pryviko-accent);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .pryviko-quick-order__status {

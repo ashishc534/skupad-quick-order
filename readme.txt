@@ -4,7 +4,7 @@ Tags: woocommerce, quick order, sku, b2b, wholesale
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 9.0
@@ -21,12 +21,15 @@ Pryviko is a lightweight paste pad:
 * Paste SKU + quantity lines (comma, tab, or space-separated)
 * Live validation against your catalog (SKU found, stock, price, purchasable)
 * One-click add to cart
+* Shareable Order Links — copy a `?pryviko=SKU:QTY` link and reopen the pad pre-filled with live validation
+* Messy Email/WhatsApp Smart Paste — extract `3x SKU`, `SKU (2)`, `5 of SKU` from unstructured text
+* Load Last Order — logged-in buyers reload their most recent order lines (validate before add)
 * Works with High-Performance Order Storage (HPOS / custom order tables)
 * Compatible with Cart and Checkout Blocks (uses the standard WooCommerce cart session)
 * Shortcode `[pryviko_quick_order]`
 * GPL-2.0-or-later, no trialware — free paste pad stays fully unlocked
 
-Optional Pro add-on (separate purchase, **$39/year**): file upload for SKU lists, saved order lists, and one-click reorder. Free paste features stay free.
+Optional Pro ($39/year, 14-day trial): variation SKU attribute labels, CSV upload + Sample CSV (using your store SKUs), saved order lists, PO number & line notes. Free paste features stay free.
 
 == Installation ==
 
@@ -48,7 +51,7 @@ Yes. Lines are added via `WC()->cart->add_to_cart()`, which updates the shared c
 
 = Is there a free trial lock? =
 
-No. The free paste-SKU workflow is fully unlocked under GPL-2.0-or-later. Pro features are a separate optional add-on.
+No. The free paste-SKU workflow is fully unlocked under GPL-2.0-or-later. Pro features are optional (14-day trial via Freemius).
 
 = Can I require login for wholesale? =
 
@@ -56,7 +59,11 @@ Yes. Filter `pryviko_quick_order_can_use` to return true only for logged-in cust
 
 = Does Free include file upload? =
 
-No. Free supports pasting SKU + quantity text into the pad. File upload is part of the optional Pro add-on.
+No. Free supports pasting SKU + quantity text into the pad. File upload and Sample CSV download are part of the optional Pro add-on.
+
+= What are Shareable Order Links? =
+
+After validating SKUs, click **Copy Order Link** to put a URL with `?pryviko=SKU1:QTY1,SKU2:QTY2` on the clipboard. Opening that link populates the pad and runs validation automatically.
 
 == Screenshots ==
 
@@ -65,6 +72,14 @@ No. Free supports pasting SKU + quantity text into the pad. File upload is part 
 3. WordPress page shortcode [pryviko_quick_order] filling the WooCommerce cart from one quick-order submit.
 
 == Changelog ==
+
+= 1.1.0 =
+* Pro (Freemius): variation SKU attribute labels, CSV upload (512KB / 500 rows), saved lists (25×250), PO number & line notes.
+* Free upgrade UX: subtle Pro pills on Upload CSV & Saved Lists tabs with inline upgrade card (no wp-admin banners).
+* Shareable Order Links: Copy Order Link encodes `?pryviko=SKU:QTY` (+ optional `&po=` when Pro); open link to populate + validate.
+* Messy Email/WhatsApp Smart Paste: `QTYx SKU`, `SKU (QTY)`, `QTY of SKU` extraction; conversational prose ignored.
+* Load Last Order (logged-in): GET `/pryviko/v1/last-order` returns current user's latest non-trashed order lines for validate-first reorder.
+* Pro Sample CSV: GET `/pryviko/v1/sample-csv` — up to 3 publish+visible store SKUs (never draft/private/hidden).
 
 = 1.0.2 =
 * Security: REST validate and quick-order no longer disclose name, price, or stock for draft, private, pending, or catalog-hidden products (or variations of non-public parents). Same response as unknown SKU.
@@ -81,6 +96,9 @@ No. Free supports pasting SKU + quantity text into the pad. File upload is part 
 * Initial release: paste-line SKU parser, catalog validator, REST validate + quick-order, shortcode UI, HPOS and Cart/Checkout Blocks compatibility declarations.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Pro features via Freemius, shareable order links, smart paste, load last order, and sample CSV. Free paste pad unchanged.
 
 = 1.0.2 =
 Security: closes draft/private SKU information disclosure on REST endpoints. Plugin renamed to Pryviko; update shortcode to `[pryviko_quick_order]`.
