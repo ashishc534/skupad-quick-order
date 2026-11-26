@@ -3,7 +3,21 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VERSION="1.1.0"
+# Prefer: arg1 → env VERSION → plugin header → readme Stable tag
+if [[ -n "${1:-}" ]]; then
+  VERSION="$1"
+elif [[ -n "${VERSION:-}" ]]; then
+  :
+else
+  VERSION="$(sed -n 's/^ \* Version:[[:space:]]*//p' "${ROOT}/pryviko-quick-order.php" | head -1 | tr -d '[:space:]')"
+  if [[ -z "${VERSION}" ]]; then
+    VERSION="$(sed -n 's/^Stable tag:[[:space:]]*//p' "${ROOT}/readme.txt" | head -1 | tr -d '[:space:]')"
+  fi
+fi
+if [[ -z "${VERSION}" ]]; then
+  echo "ERROR: could not determine VERSION" >&2
+  exit 1
+fi
 NAME="pryviko-quick-order"
 DIST="${ROOT}/dist"
 STAGE="${DIST}/.stage-${NAME}"
