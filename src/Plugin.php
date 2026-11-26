@@ -281,7 +281,7 @@ final class Plugin
                 <li><?php esc_html_e('PHP 8.0+', 'pryviko-quick-order'); ?></li>
             </ul>
             <h2><?php esc_html_e('Pro (optional)', 'pryviko-quick-order'); ?></h2>
-            <p><?php esc_html_e('Variation SKU labels, CSV upload, saved lists, PO number & line notes — $39/year with 14-day trial. Free paste features stay free forever.', 'pryviko-quick-order'); ?></p>
+            <p><?php esc_html_e('Variation SKU labels, CSV upload, saved lists, PO number & line notes — 14-day free trial. Plans: $59/yr Single Site, $129/yr 5 Sites, $249/yr 25 Sites. Free paste features stay free forever.', 'pryviko-quick-order'); ?></p>
         </div>
         <?php
     }

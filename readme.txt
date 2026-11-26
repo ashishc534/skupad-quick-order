@@ -29,7 +29,7 @@ Pryviko is a lightweight paste pad:
 * Shortcode `[pryviko_quick_order]`
 * GPL-2.0-or-later, no trialware — free paste pad stays fully unlocked
 
-Optional Pro ($39/year, 14-day trial): variation SKU attribute labels, CSV upload + Sample CSV (using your store SKUs), saved order lists, PO number & line notes. Free paste features stay free.
+Optional Pro (14-day free trial): variation SKU attribute labels, CSV upload + Sample CSV (using your store SKUs), saved order lists, PO number & line notes. Plans: **$59/yr** Single Site, **$129/yr** 5 Sites, **$249/yr** 25 Sites. Free paste features stay free.
 
 == Installation ==
 
@@ -75,6 +75,7 @@ After validating SKUs, click **Copy Order Link** to put a URL with `?pryviko=SKU
 
 = 1.1.0 =
 * Pro (Freemius): variation SKU attribute labels, CSV upload (512KB / 500 rows), saved lists (25×250), PO number & line notes.
+* Pro pricing: $59/yr Single Site, $129/yr 5 Sites, $249/yr 25 Sites with 14-day free trial.
 * Free upgrade UX: subtle Pro pills on Upload CSV & Saved Lists tabs with inline upgrade card (no wp-admin banners).
 * Shareable Order Links: Copy Order Link encodes `?pryviko=SKU:QTY` (+ optional `&po=` when Pro); open link to populate + validate.
 * Messy Email/WhatsApp Smart Paste: `QTYx SKU`, `SKU (QTY)`, `QTY of SKU` extraction; conversational prose ignored.

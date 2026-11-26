@@ -23,7 +23,7 @@ Pryviko gives your storefront a paste pad where customers drop SKU + quantity li
 - Declared compatible with High-Performance Order Storage (HPOS)
 - Works with Cart and Checkout Blocks via the standard cart session
 - Shortcode `[pryviko_quick_order]` and Gutenberg block
-- Optional Pro add-on ($29–$79): CSV upload, saved order lists, one-click reorder
+- Optional Pro (14-day free trial): CSV upload, saved lists, variation labels, PO/notes — $59/yr Single, $129/yr 5 Sites, $249/yr 25 Sites
 
 ## Features
 
@@ -35,7 +35,7 @@ Pryviko gives your storefront a paste pad where customers drop SKU + quantity li
 ## Price
 
 - Free (WordPress.org freemium core)
-- Pro add-on: $29–$79 one-time or $39/yr (marketplace choice)
+- Pro (Freemius): $59/yr Single Site, $129/yr 5 Sites, $249/yr 25 Sites (14-day free trial)
 
 ## Compatibility
 
