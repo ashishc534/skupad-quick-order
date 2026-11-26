@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pryviko icon</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #fff; }
+  body { display: grid; place-items: center; }
+  .icon {
+    width: var(--size, 256px);
+    height: var(--size, 256px);
+    border-radius: calc(var(--size, 256px) * 0.22);
+    background: linear-gradient(145deg, #1E1B4B 0%, #312E81 48%, #4338CA 100%);
+    box-shadow: inset 0 0 0 calc(var(--size, 256px) * 0.012) rgba(255,255,255,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .icon::before {
+    content: "";
+    position: absolute;
+    inset: auto -20% -35% 35%;
+    height: 70%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 65%);
+  }
+  svg {
+    position: absolute;
+    inset: 18%;
+    width: 64%;
+    height: 64%;
+  }
+</style>
+</head>
+<body>
+  <div class="icon" id="icon">
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <!-- checklist card -->
+      <rect x="6" y="10" width="36" height="44" rx="6" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.85)" stroke-width="2.2"/>
+      <path d="M14 22h16M14 32h16M14 42h12" stroke="rgba(255,255,255,0.9)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M14 22.2l2.2 2.2 4.2-4.4" stroke="#A5B4FC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M14 32.2l2.2 2.2 4.2-4.4" stroke="#A5B4FC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- quick-cart mark -->
+      <circle cx="46" cy="44" r="13" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5"/>
+      <path d="M39.5 39.5h3.2l1.1 8.2h9.4" stroke="#312E81" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M43.2 42.2h8.6l1.1 5.5H44" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="45.2" cy="50.8" r="1.5" fill="#312E81"/>
+      <circle cx="51.4" cy="50.8" r="1.5" fill="#312E81"/>
+      <path d="M49.2 36.8v5.2M46.6 39.4h5.2" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const size = Number(params.get('size') || 256);
+    document.documentElement.style.setProperty('--size', size + 'px');
+    document.body.style.width = size + 'px';
+    document.body.style.height = size + 'px';
+  </script>
+</body>
+</html>

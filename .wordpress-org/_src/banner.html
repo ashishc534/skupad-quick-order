@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pryviko banner</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: var(--w, 1544px);
+    height: var(--h, 500px);
+    font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+    color: #EEF2FF;
+    background:
+      radial-gradient(900px 420px at 85% 20%, rgba(99,102,241,0.35), transparent 60%),
+      radial-gradient(700px 380px at 10% 90%, rgba(67,56,202,0.4), transparent 55%),
+      linear-gradient(125deg, #0F172A 0%, #1E1B4B 42%, #312E81 72%, #4338CA 100%);
+    overflow: hidden;
+    position: relative;
+  }
+  .pad {
+    position: absolute;
+    inset: 0;
+    padding: var(--pad, 48px) var(--pad-x, 56px);
+    display: grid;
+    grid-template-columns: 1.15fr 0.95fr;
+    gap: var(--gap, 40px);
+    align-items: center;
+  }
+  .brand {
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: var(--eyebrow, 18px);
+    font-weight: 600;
+    color: #A5B4FC;
+    margin: 0 0 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: var(--title, 64px);
+    line-height: 1.02;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .tag {
+    margin: 14px 0 0;
+    max-width: 18ch;
+    font-size: var(--sub, 28px);
+    line-height: 1.25;
+    font-weight: 500;
+    color: #E0E7FF;
+  }
+  .preview {
+    background: linear-gradient(165deg, #ffffff 0%, #f7f9fb 100%);
+    border: 1px solid rgba(215,222,230,0.9);
+    border-radius: var(--radius, 18px);
+    color: #1a2332;
+    padding: var(--ppad, 22px);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.28);
+  }
+  .preview h3 {
+    margin: 0 0 6px;
+    font-size: var(--ptitle, 20px);
+    font-weight: 650;
+  }
+  .preview .hint {
+    margin: 0 0 12px;
+    color: #5c6b7a;
+    font-size: var(--phint, 13px);
+  }
+  .preview pre {
+    margin: 0;
+    min-height: var(--pre-h, 110px);
+    padding: 12px 14px;
+    border: 1px solid #d7dee6;
+    border-radius: 10px;
+    background: #fff;
+    font: 500 var(--mono, 14px)/1.45 "IBM Plex Mono", ui-monospace, monospace;
+    color: #1a2332;
+    white-space: pre-wrap;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font: 600 var(--btn, 13px)/1 "IBM Plex Sans", sans-serif;
+    color: #fff;
+  }
+  .btn.validate { background: #243447; }
+  .btn.add { background: #0b6e4f; }
+  .status {
+    margin-top: 10px;
+    color: #0b6e4f;
+    font-size: var(--status, 13px);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="pad">
+    <div>
+      <p class="brand">Pryviko</p>
+      <h1>Pryviko</h1>
+      <p class="tag">Quick Order &amp; Paste-SKU Pad for WooCommerce</p>
+    </div>
+    <div class="preview" aria-hidden="true">
+      <h3>Quick order by SKU</h3>
+      <p class="hint">Paste SKU + quantity lines. One product per line.</p>
+      <pre>SKU-1042, 5
+SKU-2089 x 12
+SKU-3310	3</pre>
+      <div class="actions">
+        <span class="btn validate">Validate</span>
+        <span class="btn add">Add to cart</span>
+      </div>
+      <div class="status">3 / 3 SKUs ready.</div>
+    </div>
+  </div>
+  <script>
+    const p = new URLSearchParams(location.search);
+    const w = Number(p.get('w') || 1544);
+    const h = Number(p.get('h') || 500);
+    const scale = w / 1544;
+    document.documentElement.style.setProperty('--w', w + 'px');
+    document.documentElement.style.setProperty('--h', h + 'px');
+    document.documentElement.style.setProperty('--pad', (48 * scale) + 'px');
+    document.documentElement.style.setProperty('--pad-x', (56 * scale) + 'px');
+    document.documentElement.style.setProperty('--gap', (40 * scale) + 'px');
+    document.documentElement.style.setProperty('--eyebrow', (18 * scale) + 'px');
+    document.documentElement.style.setProperty('--title', (64 * scale) + 'px');
+    document.documentElement.style.setProperty('--sub', (28 * scale) + 'px');
+    document.documentElement.style.setProperty('--radius', (18 * scale) + 'px');
+    document.documentElement.style.setProperty('--ppad', (22 * scale) + 'px');
+    document.documentElement.style.setProperty('--ptitle', (20 * scale) + 'px');
+    document.documentElement.style.setProperty('--phint', (13 * scale) + 'px');
+    document.documentElement.style.setProperty('--mono', (14 * scale) + 'px');
+    document.documentElement.style.setProperty('--pre-h', (110 * scale) + 'px');
+    document.documentElement.style.setProperty('--btn', (13 * scale) + 'px');
+    document.documentElement.style.setProperty('--status', (13 * scale) + 'px');
+    document.body.style.width = w + 'px';
+    document.body.style.height = h + 'px';
+  </script>
+</body>
+</html>

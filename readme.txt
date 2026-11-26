@@ -60,7 +60,9 @@ No. Free supports pasting SKU + quantity text into the pad. File upload is part 
 
 == Screenshots ==
 
-1. Paste pad with Validate and Add to cart actions.
+1. Storefront Quick Order table with SKU rows, qty, live stock and unit-price badges, subtotal, and Add All to Cart.
+2. Paste SKUs tab with multi-line SKU, Qty input and valid/invalid validation feedback.
+3. WordPress page shortcode [pryviko_quick_order] filling the WooCommerce cart from one quick-order submit.
 
 == Changelog ==
 
