@@ -62,6 +62,11 @@ final class QuickOrderController
                                 'type' => 'boolean',
                                 'default' => true,
                             ],
+                            'po_number' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'default' => '',
+                            ],
                         ],
                     ]
                 );
@@ -71,9 +76,6 @@ final class QuickOrderController
 
     /**
      * Public storefront callback (PCP-safe): any visitor may validate / add.
-     *
-     * Documented public endpoint — same as `__return_true`, with an optional
-     * filter so wholesale stores can require login.
      *
      * Filter `pryviko_quick_order_can_use` to require login for wholesale stores.
      */
@@ -158,6 +160,7 @@ final class QuickOrderController
 
         $raw = (string) $request->get_param('payload');
         $add = filter_var($request->get_param('add_to_cart'), FILTER_VALIDATE_BOOLEAN);
+        $po_number = sanitize_text_field((string) $request->get_param('po_number'));
 
         $parsed = LineParser::parse($raw);
         if ($parsed === []) {
@@ -181,7 +184,6 @@ final class QuickOrderController
                 );
             }
 
-            // REST requests often skip frontend cart bootstrap — load it explicitly.
             if (is_null(WC()->cart) && function_exists('wc_load_cart')) {
                 wc_load_cart();
             }
@@ -194,9 +196,12 @@ final class QuickOrderController
                 );
             }
 
-            // Ensure session exists for guests (Blocks + classic).
             if (WC()->session && !WC()->session->has_session()) {
                 WC()->session->set_customer_session_cookie(true);
+            }
+
+            if (SkuValidator::isPro() && $po_number !== '' && WC()->session) {
+                WC()->session->set('pryviko_po_number', $po_number);
             }
 
             foreach ($lines as $line) {
@@ -204,7 +209,19 @@ final class QuickOrderController
                     $failed[] = $line;
                     continue;
                 }
-                $key = WC()->cart->add_to_cart((int) $line['product_id'], (int) $line['qty']);
+
+                $cart_item_data = [];
+                if (SkuValidator::isPro() && !empty($line['note'])) {
+                    $cart_item_data['pryviko_line_note'] = (string) $line['note'];
+                }
+
+                $key = WC()->cart->add_to_cart(
+                    (int) $line['product_id'],
+                    (int) $line['qty'],
+                    0,
+                    [],
+                    $cart_item_data
+                );
                 if ($key) {
                     $line['cart_key'] = $key;
                     $added[] = $line;

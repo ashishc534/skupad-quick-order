@@ -21,7 +21,7 @@ for main in php_mains:
         header_ok = True
         assert "GPL-2.0-or-later" in text or "GPLv2" in text
         assert "Requires PHP:      8.0" in text or "Requires PHP: 8.0" in text
-        assert "1.0.2" in text, "bootstrap version must be 1.0.2"
+        assert "1.1.0" in text, "bootstrap version must be 1.1.0"
         assert "pryviko-quick-order" in text, "text domain / slug missing"
         assert "Pryviko" in text, "display brand missing"
         break
@@ -32,7 +32,11 @@ assert not (root / "skupad-quick-order.php").exists(), "legacy bootstrap must be
 
 assert (root / "readme.txt").is_file(), "readme.txt missing"
 readme = (root / "readme.txt").read_text(encoding="utf-8")
-assert "Stable tag: 1.0.2" in readme
+assert "Stable tag: 1.1.0" in readme
+assert "Shareable Order Links" in readme or "shareable" in readme.lower()
+assert "Smart Paste" in readme or "WhatsApp" in readme
+assert "Load Last Order" in readme
+assert "Sample CSV" in readme
 assert "Requires at least:" in readme
 assert "Tested up to:" in readme
 assert "Requires PHP:" in readme

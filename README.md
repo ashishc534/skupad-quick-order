@@ -14,7 +14,7 @@ B2B and wholesale WooCommerce buyers with SKU lists waste time adding products o
 ## Pricing
 
 - Free on WordPress.org: paste SKU + qty pad with live stock/price validation
-- Optional Pro add-on: $29–$79 (CSV upload, saved lists, one-click reorder) via WooCommerce.com / Freemius / Dodo Payments
+- Optional Pro (Freemius, 14-day free trial): CSV upload, saved lists, variation labels, PO/notes — $59/yr Single Site, $129/yr 5 Sites, $249/yr 25 Sites
 
 ## Install (local / staging)
 
